@@ -6,6 +6,8 @@ import com.viktorsuetnov.carbook.entity.enums.OdometerType;
 import com.viktorsuetnov.carbook.entity.enums.TransmissionType;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Car {
 
@@ -25,4 +27,6 @@ public class Car {
     private String vrp;
 
     private User owner;
+
+    private List<Event> events = new ArrayList<Event>();
 }

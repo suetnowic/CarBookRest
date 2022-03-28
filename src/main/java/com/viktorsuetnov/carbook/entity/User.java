@@ -39,6 +39,24 @@ public class User implements UserDetails {
 
     public User() { }
 
+    public User (Long id,
+                 String username,
+                 String email,
+                 String password,
+                 Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    @Override
+    public String getPassword() { return password; }
+
+    @Override
+    public String getUsername() { return username; }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

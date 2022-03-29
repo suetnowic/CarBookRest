@@ -13,17 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.viktorsuetnov.carbook.security.SecurityConstants.HEADER_STRING;
+
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-    @Value("${carbook.app.headerString}")
-    private String headerString;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         InvalidLoginResponse loginResponse = new InvalidLoginResponse();
         String jsonLoginResponse = new Gson().toJson(loginResponse);
-        response.setContentType(headerString);
+        response.setContentType(HEADER_STRING);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().println(jsonLoginResponse);
     }

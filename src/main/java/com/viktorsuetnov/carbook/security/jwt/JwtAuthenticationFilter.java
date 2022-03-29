@@ -19,12 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+import static com.viktorsuetnov.carbook.security.SecurityConstants.HEADER_STRING;
+import static com.viktorsuetnov.carbook.security.SecurityConstants.TOKEN_PREFIX;
 
-    @Value("${carbook.app.headerString}")
-    private String headerString;
-    @Value("${carbook.app.tokenPrefix}")
-    private String tokenPrefix;
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final Logger LOG = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
@@ -54,8 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String biggerToken = request.getHeader(headerString);
-        if (StringUtils.hasText(biggerToken) && biggerToken.startsWith(tokenPrefix)) {
+        String biggerToken = request.getHeader(HEADER_STRING);
+        if (StringUtils.hasText(biggerToken) && biggerToken.startsWith(TOKEN_PREFIX)) {
             return biggerToken.split(" ")[1];
         }
         return null;

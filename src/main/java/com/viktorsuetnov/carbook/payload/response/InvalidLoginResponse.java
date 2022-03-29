@@ -1,5 +1,8 @@
 package com.viktorsuetnov.carbook.payload.response;
 
+import lombok.Getter;
+
+@Getter
 public class InvalidLoginResponse {
 
     private String username;
@@ -10,11 +13,4 @@ public class InvalidLoginResponse {
         this.password = "Invalid password";
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

@@ -8,7 +8,6 @@ import com.viktorsuetnov.carbook.security.jwt.JwtTokenProvider;
 import com.viktorsuetnov.carbook.service.UserService;
 import com.viktorsuetnov.carbook.validations.ResponseErrorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,14 +20,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.viktorsuetnov.carbook.security.SecurityConstants.TOKEN_PREFIX;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 @PreAuthorize("permitAll()")
 public class AuthController {
-
-    @Value("${carbook.app.tokenPrefix}")
-    private String tokenPrefix;
 
     @Autowired
     private ResponseErrorValidator responseErrorValidator;
@@ -43,13 +41,13 @@ public class AuthController {
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest request,
                                                    BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidator.mapValidationService(bindingResult);
-        if (ObjectUtils.isEmpty(errors)) return errors;
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(), request.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenPrefix + jwtTokenProvider.generateToken(authentication);
+        String jwt = TOKEN_PREFIX + jwtTokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtTokenSuccessResponse(true, jwt));
     }
 
@@ -57,7 +55,7 @@ public class AuthController {
     public ResponseEntity<Object> registerUser(@Valid @RequestBody SignupRequest request,
                                                BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidator.mapValidationService(bindingResult);
-        if (ObjectUtils.isEmpty(errors)) return errors;
+        if (!ObjectUtils.isEmpty(errors)) return errors;
         userService.createUser(request);
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }

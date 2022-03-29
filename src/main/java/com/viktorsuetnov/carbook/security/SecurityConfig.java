@@ -18,13 +18,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.viktorsuetnov.carbook.security.SecurityConstants.SIGN_UP_URL;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Value("${carbook.app.signUpUrls}")
-    private String signUpUrls;
 
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -62,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers(signUpUrls)
+                    .antMatchers(SIGN_UP_URL)
                     .permitAll()
                     .anyRequest()
                     .authenticated();

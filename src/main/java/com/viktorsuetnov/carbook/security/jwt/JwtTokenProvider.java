@@ -12,20 +12,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.viktorsuetnov.carbook.security.SecurityConstants.JWT_EXPIRATION_TIME;
+import static com.viktorsuetnov.carbook.security.SecurityConstants.JWT_SECRET;
+
 @Component
 public class JwtTokenProvider {
-
-    @Value("${carbook.app.jwtExpirationTime}")
-    private long expirationTime;
-    @Value("${carbook.app.jwtSecret}")
-    private String secretKey;
 
     public static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Date now = new Date(System.currentTimeMillis());
-        Date expiryDate = new Date(now.getTime() + expirationTime);
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_TIME);
 
         String userId = Long.toString(user.getId());
 
@@ -38,14 +36,14 @@ public class JwtTokenProvider {
                 .addClaims(claimsMap)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(JWT_SECRET)
                     .parseClaimsJws(token);
             return true;
         } catch (SignatureException signatureException) {
@@ -64,7 +62,7 @@ public class JwtTokenProvider {
 
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(JWT_SECRET)
                 .parseClaimsJws(token)
                 .getBody();
         String id = (String) claims.get("id");

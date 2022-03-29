@@ -17,7 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -31,8 +31,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<ERole> roles = new HashSet<>();
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner", orphanRemoval = true)
-//    private List<Car> cars = new ArrayList<Car>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "owner", orphanRemoval = true)
+    private List<Car> cars = new ArrayList<>();
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;

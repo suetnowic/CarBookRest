@@ -1,4 +1,4 @@
-package com.viktorsuetnov.carbook.web;
+package com.viktorsuetnov.carbook.controller;
 
 import com.viktorsuetnov.carbook.payload.request.LoginRequest;
 import com.viktorsuetnov.carbook.payload.request.SignupRequest;

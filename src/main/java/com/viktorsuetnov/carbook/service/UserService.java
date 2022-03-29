@@ -1,5 +1,6 @@
 package com.viktorsuetnov.carbook.service;
 
+import com.viktorsuetnov.carbook.dto.UserDTO;
 import com.viktorsuetnov.carbook.entity.User;
 import com.viktorsuetnov.carbook.entity.enums.ERole;
 import com.viktorsuetnov.carbook.exceptions.UserExistException;
@@ -8,8 +9,11 @@ import com.viktorsuetnov.carbook.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 public class UserService {
@@ -39,5 +43,21 @@ public class UserService {
             LOG.error("Error during registration {}", exception.getMessage());
             throw new UserExistException("The user with " + userIn.getUsername() + "already exist");
         }
+    }
+
+    public User updateUser(UserDTO userDTO, Principal principal) {
+        User userFromDB = getUserByPrincipal(principal);
+        userFromDB.setEmail(userDTO.getEmail());
+        return userRepository.save(userFromDB);
+    }
+
+    public User getCurrentUser(Principal principal) {
+        return getUserByPrincipal(principal);
+    }
+
+    private User getUserByPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
     }
 }

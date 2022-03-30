@@ -11,7 +11,7 @@ public class CarDTO {
     private String carBrand;
     private String carModel;
     private String carGeneration;
-    private Date yearOfIssue;
+    private String yearOfIssue;
     private String carTransmission;
     private String carEngineType;
     private String carBodyType;

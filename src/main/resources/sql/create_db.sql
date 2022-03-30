@@ -15,7 +15,7 @@ create table events
 (
     id               bigint not null,
     car_id           bigint,
-    date_event       date,
+    date_event       varchar(4),
     operation_title  varchar(255),
     consumables      varchar(255),
     qty              float8,

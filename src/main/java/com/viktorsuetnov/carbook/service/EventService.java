@@ -5,6 +5,7 @@ import com.viktorsuetnov.carbook.entity.Car;
 import com.viktorsuetnov.carbook.entity.Event;
 import com.viktorsuetnov.carbook.entity.User;
 import com.viktorsuetnov.carbook.exceptions.CarNotFoundException;
+import com.viktorsuetnov.carbook.exceptions.EventNotFoundException;
 import com.viktorsuetnov.carbook.repository.CarRepository;
 import com.viktorsuetnov.carbook.repository.EventRepository;
 import com.viktorsuetnov.carbook.repository.UserRepository;
@@ -52,15 +53,22 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public List<Event> getAllEventsForCar(Long carId) {
-        Car car = carRepository.getCarById(carId)
+    public Event getEventById(Long eventId, Principal principal) {
+        User user = getUserByPrincipal(principal);
+        return eventRepository.findEventsByCarIdAndCarOwner(eventId, user)
+                .orElseThrow(() -> new EventNotFoundException("Event cannot be found for username {}" + user.getEmail()));
+    }
+
+    public List<Event> getAllEventsForCar(Long carId, Principal principal) {
+        User user = getUserByPrincipal(principal);
+        Car car = carRepository.getCarByIdAndOwner(carId, user)
                 .orElseThrow(() -> new CarNotFoundException("Car cannot be found"));
         return eventRepository.getEventsByCar(car);
     }
 
-    public void deleteEvent(Long eventId) {
-        Optional<Event> event = eventRepository.findById(eventId);
-        event.ifPresent(eventRepository::delete);
+    public void deleteEvent(Long eventId, Principal principal) {
+        Event event = getEventById(eventId, principal);
+        eventRepository.delete(event);
     }
 
     private User getUserByPrincipal(Principal principal) {
@@ -68,5 +76,4 @@ public class EventService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
     }
-
 }

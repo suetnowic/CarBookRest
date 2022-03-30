@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -45,7 +46,7 @@ public class UserService {
         }
     }
 
-    public User updateUser(UserDTO userDTO, Principal principal) {
+    public User updateProfile(UserDTO userDTO, Principal principal) {
         User userFromDB = getUserByPrincipal(principal);
         userFromDB.setEmail(userDTO.getEmail());
         return userRepository.save(userFromDB);
@@ -60,4 +61,8 @@ public class UserService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
     }
+
+   public List<User> findAll() {
+        return userRepository.findAll();
+   }
 }

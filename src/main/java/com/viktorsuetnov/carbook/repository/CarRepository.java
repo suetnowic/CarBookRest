@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
 
+    Optional<Car> getCarById(Long id);
+
     List<Car> getCarsByOwner(User owner);
 
     Optional<Car> getCarByIdAndOwner(Long carId, User owner);

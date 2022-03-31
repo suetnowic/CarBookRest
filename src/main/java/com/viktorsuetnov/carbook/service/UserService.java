@@ -56,7 +56,7 @@ public class UserService {
         if (isEmailChange) {
             userFromDB.setEmail(newEmail);
         }
-        if (!StringUtils.hasText(newPassword)) {
+        if (StringUtils.hasText(newPassword)) {
             userFromDB.setPassword(bCryptPasswordEncoder.encode(newPassword));
         }
         return userRepository.save(userFromDB);

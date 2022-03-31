@@ -13,6 +13,8 @@ public class CarFacade {
         carDTO.setCarBrand(car.getCarBrand());
         carDTO.setCarModel(car.getCarModel());
         carDTO.setYearOfIssue(car.getYearOfIssue());
+        carDTO.setCarEngineCapacity(car.getCarEngineCapacity());
+        carDTO.setVrp(car.getVrp());
         return carDTO;
     }
 }

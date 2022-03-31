@@ -30,12 +30,12 @@ public class CarController {
     private ResponseErrorValidator responseErrorValidator;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createCar(@Valid @RequestBody CarDTO carDTO,
+    public ResponseEntity<Object> createCar(@Valid @RequestBody Car carIn,
                                             BindingResult bindingResult,
                                             Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidator.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
-        Car car = carService.createCar(carDTO, principal);
+        Car car = carService.createCar(carIn, principal);
         CarDTO createdCar = carFacade.carToCarDTO(car);
         return new ResponseEntity<>(createdCar, HttpStatus.OK);
     }
@@ -58,12 +58,12 @@ public class CarController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateCar(@Valid @RequestBody CarDTO carDTO,
+    public ResponseEntity<Object> updateCar(@Valid @RequestBody Car carIn,
                                             BindingResult bindingResult,
                                             Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidator.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
-        Car car = carService.updateCar(carDTO, principal);
+        Car car = carService.updateCar(carIn, principal);
         CarDTO carUpdated = carFacade.carToCarDTO(car);
         return new ResponseEntity<>(carUpdated, HttpStatus.OK);
     }

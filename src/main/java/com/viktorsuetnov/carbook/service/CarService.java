@@ -45,41 +45,41 @@ public class CarService {
                         "Car with id " + carId + " and user " + user.getEmail() + " not found"));
     }
 
-    public Car createCar(CarDTO carDTO, Principal principal) {
+    public Car createCar(Car carIn, Principal principal) {
         User user = getUserByPrincipal(principal);
         Car car = new Car();
         car.setOwner(user);
-        createOrUpdateCar(carDTO, car);
+        createAndUpdateCar(carIn, car);
 
         LOG.info("Saving Car for user {}", user.getEmail());
         return carRepository.save(car);
     }
 
-    public Car updateCar(CarDTO carDTO, Principal principal) {
+    public Car updateCar(Car carIn, Principal principal) {
         User user = getUserByPrincipal(principal);
-        Car carFromDB = carRepository.getCarByIdAndOwner(carDTO.getId(), user)
+        Car carFromDB = carRepository.getCarByIdAndOwner(carIn.getId(), user)
                 .orElseThrow(() -> new CarNotFoundException(
-                "Car with id " + carDTO.getId() + " and user " + user.getEmail() + " not found"));
-        createOrUpdateCar(carDTO, carFromDB);
+                "Car with id " + carIn.getId() + " and user " + user.getEmail() + " not found"));
+        createAndUpdateCar(carIn, carFromDB);
 
         LOG.info("Updating Car for user {}", user.getEmail());
         return carRepository.save(carFromDB);
     }
 
-    private void createOrUpdateCar(CarDTO carDTO, Car carFromDB) {
-        carFromDB.setCarBrand(carDTO.getCarBrand());
-        carFromDB.setCarModel(carDTO.getCarModel());
-        carFromDB.setCarGeneration(carDTO.getCarGeneration());
-        carFromDB.setYearOfIssue(carDTO.getYearOfIssue());
-        carFromDB.setCarTransmission(carDTO.getCarTransmission());
-        carFromDB.setCarEngineType(carDTO.getCarEngineType());
-        carFromDB.setCarBodyType(carDTO.getCarBodyType());
-        carFromDB.setCarEngineCapacity(carDTO.getCarEngineCapacity());
-        carFromDB.setCarEngineCapacity(carDTO.getCarEngineCapacity());
-        carFromDB.setCarEnginePower(carDTO.getCarEnginePower());
-        carFromDB.setCarOdometerType(carDTO.getCarOdometerType());
-        carFromDB.setCarColor(carDTO.getCarColor());
-        carFromDB.setVrp(carDTO.getVrp());
+    private void createAndUpdateCar(Car carIn, Car carFromDB) {
+        carFromDB.setCarBrand(carIn.getCarBrand());
+        carFromDB.setCarModel(carIn.getCarModel());
+        carFromDB.setCarGeneration(carIn.getCarGeneration());
+        carFromDB.setYearOfIssue(carIn.getYearOfIssue());
+        carFromDB.setCarTransmission(carIn.getCarTransmission());
+        carFromDB.setCarEngineType(carIn.getCarEngineType());
+        carFromDB.setCarBodyType(carIn.getCarBodyType());
+        carFromDB.setCarEngineCapacity(carIn.getCarEngineCapacity());
+        carFromDB.setCarEngineCapacity(carIn.getCarEngineCapacity());
+        carFromDB.setCarEnginePower(carIn.getCarEnginePower());
+        carFromDB.setCarOdometerType(carIn.getCarOdometerType());
+        carFromDB.setCarColor(carIn.getCarColor());
+        carFromDB.setVrp(carIn.getVrp());
     }
 
     private User getUserByPrincipal(Principal principal) {

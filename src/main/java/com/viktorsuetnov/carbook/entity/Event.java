@@ -1,9 +1,11 @@
 package com.viktorsuetnov.carbook.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
+
 
 @Data
 @Entity
@@ -19,6 +21,7 @@ public class Event {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateEvent;
+
     private String operationTitle;
     private String consumables;
     private Double qty;

@@ -4,7 +4,8 @@ import com.viktorsuetnov.carbook.entity.Car;
 import lombok.Data;
 
 import javax.persistence.Column;
-import java.sql.Date;
+import java.util.Date;
+
 
 @Data
 public class EventDTO {

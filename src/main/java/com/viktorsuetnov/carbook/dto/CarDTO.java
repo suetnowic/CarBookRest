@@ -3,7 +3,7 @@ package com.viktorsuetnov.carbook.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class CarDTO {
@@ -12,7 +12,10 @@ public class CarDTO {
     private String carBrand;
     private String carModel;
     private String carGeneration;
-    private String yearOfIssue;
+
+    @JsonFormat(pattern = "yyyy")
+    private Date yearOfIssue;
+
     private String carTransmission;
     private String carEngineType;
     private String carBodyType;

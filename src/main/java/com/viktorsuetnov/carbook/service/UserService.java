@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.security.Principal;
 import java.util.List;
@@ -46,11 +47,21 @@ public class UserService {
         }
     }
 
-    public User updateProfile(UserDTO userDTO, Principal principal) {
+    public User updateProfile(User userIn, Principal principal) {
         User userFromDB = getUserByPrincipal(principal);
-        userFromDB.setEmail(userDTO.getEmail());
+        String newEmail = userIn.getEmail();
+        String newPassword = userIn.getPassword();
+        String userEmail = userFromDB.getEmail();
+        boolean isEmailChange = newEmail != null && !newEmail.equals(userEmail) || (userEmail != null && !userEmail.equals(newEmail));
+        if (isEmailChange) {
+            userFromDB.setEmail(newEmail);
+        }
+        if (!StringUtils.hasText(newPassword)) {
+            userFromDB.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        }
         return userRepository.save(userFromDB);
     }
+
 
     public User getCurrentUser(Principal principal) {
         return getUserByPrincipal(principal);

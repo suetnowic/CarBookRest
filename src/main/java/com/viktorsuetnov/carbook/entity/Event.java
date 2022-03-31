@@ -17,6 +17,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.EAGER)
     private Car car;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateEvent;
     private String operationTitle;
     private String consumables;

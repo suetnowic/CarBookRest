@@ -7,7 +7,7 @@ CREATE TABLE cars
     id        bigint not null,
     car_brand varchar(50),
     car_model varchar(50),
-    owner_id  bigint references users (id),
+    user_id  bigint references users (id),
     primary key (id)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE users
 );
 
 ALTER TABLE IF EXISTS cars
-    add constraint car_user_fk foreign key (owner_id) references users;
+    add constraint car_user_fk foreign key (user_id) references users;
 
 ALTER TABLE IF EXISTS events
     add constraint car_event_fk foreign key (car_id) references cars;

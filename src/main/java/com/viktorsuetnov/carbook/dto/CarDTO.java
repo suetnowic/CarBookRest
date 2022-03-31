@@ -1,5 +1,6 @@
 package com.viktorsuetnov.carbook.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.sql.Date;

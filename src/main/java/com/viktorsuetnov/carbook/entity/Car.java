@@ -18,7 +18,10 @@ public class Car {
     private String carBrand;
     private String carModel;
     private String carGeneration;
-    private String yearOfIssue;
+
+    @JsonFormat(pattern = "yyyy")
+    private Date yearOfIssue;
+
     private String carTransmission;
     private String carEngineType;
     private String carBodyType;

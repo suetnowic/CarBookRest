@@ -1,6 +1,5 @@
 package com.viktorsuetnov.carbook.service;
 
-import com.viktorsuetnov.carbook.dto.UserDTO;
 import com.viktorsuetnov.carbook.entity.User;
 import com.viktorsuetnov.carbook.entity.enums.ERole;
 import com.viktorsuetnov.carbook.exceptions.UserExistException;
@@ -9,6 +8,7 @@ import com.viktorsuetnov.carbook.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,17 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MailSender mailSender;
 
     @Autowired
-    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, MailSender mailSender) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
+        this.mailSender = mailSender;
     }
+
+    @Value("${hostname}")
+    private String hostname;
 
     public User createUser(SignupRequest userIn) {
         User user = new User();
@@ -62,15 +67,8 @@ public class UserService {
         return userRepository.save(userFromDB);
     }
 
-
     public User getCurrentUser(Principal principal) {
         return getUserByPrincipal(principal);
-    }
-
-    private User getUserByPrincipal(Principal principal) {
-        String username = principal.getName();
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
     }
 
    public List<User> findAll() {
@@ -79,5 +77,21 @@ public class UserService {
 
     public User getUserById(Long userId) {
         return userRepository.findUserById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private User getUserByPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
+    }
+
+    private void sendMessage(User user) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format("Здравствуйте, %s! \n" +
+                    "Уведомляем Вас, что Вы были зарегистрированы. Ваш логин для входа: %s. \n" +
+                    "Для активации аккаунта перейдите по ссылке: http://%s/api/user/activate/%s",
+                    user.getUsername(), user.getEmail(), hostname, null);
+            mailSender.send(user.getEmail(), "Подтверждение регистрации", message);
+        }
     }
 }

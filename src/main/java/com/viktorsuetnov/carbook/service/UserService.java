@@ -87,11 +87,11 @@ public class UserService {
 
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format("Здравствуйте, %s! \n" +
-                    "Уведомляем Вас, что Вы были зарегистрированы. Ваш логин для входа: %s. \n" +
-                    "Для активации аккаунта перейдите по ссылке: http://%s/api/user/activate/%s",
+            String message = String.format("Hello, %s! \n" +
+                    "Notifying you that you have been registered. Your login is %s. \n" +
+                    "To activate your account, follow the link: http://%s/api/user/activate/%s",
                     user.getUsername(), user.getEmail(), hostname, null);
-            mailSender.send(user.getEmail(), "Подтверждение регистрации", message);
+            mailSender.send(user.getEmail(), "Confirmation of registration", message);
         }
     }
 }

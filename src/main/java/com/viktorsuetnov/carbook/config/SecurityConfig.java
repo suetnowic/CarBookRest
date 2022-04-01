@@ -1,4 +1,4 @@
-package com.viktorsuetnov.carbook.security;
+package com.viktorsuetnov.carbook.config;
 
 import com.viktorsuetnov.carbook.security.jwt.JwtAuthenticationEntryPoint;
 import com.viktorsuetnov.carbook.security.jwt.JwtAuthenticationFilter;

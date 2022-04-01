@@ -1,6 +1,7 @@
 package com.viktorsuetnov.carbook.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.viktorsuetnov.carbook.annotations.ValidVehicleRegPlate;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -31,6 +32,8 @@ public class Car {
     private String carOdometerType;
     private String carColor;
     private Double currentMileage;
+
+    @ValidVehicleRegPlate
     private String vrp;
 
     @ManyToOne(fetch = FetchType.LAZY)

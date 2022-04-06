@@ -24,13 +24,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final MailSender mailSender;
 
     @Autowired
-    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, MailSender mailSender) {
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
-        this.mailSender = mailSender;
     }
 
     @Value("${hostname}")
@@ -57,7 +55,7 @@ public class UserService {
         String newEmail = userIn.getEmail();
         String newPassword = userIn.getPassword();
         String userEmail = userFromDB.getEmail();
-        boolean isEmailChange = newEmail != null && !newEmail.equals(userEmail) || (userEmail != null && !userEmail.equals(newEmail));
+        boolean isEmailChange = (newEmail != null && !newEmail.equals(userEmail)) || (userEmail != null && !userEmail.equals(newEmail));
         if (isEmailChange) {
             userFromDB.setEmail(newEmail);
         }
@@ -83,15 +81,5 @@ public class UserService {
         String username = principal.getName();
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not found"));
-    }
-
-    private void sendMessage(User user) {
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format("Hello, %s! \n" +
-                    "Notifying you that you have been registered. Your login is %s. \n" +
-                    "To activate your account, follow the link: http://%s/api/user/activate/%s",
-                    user.getUsername(), user.getEmail(), hostname, null);
-            mailSender.send(user.getEmail(), "Confirmation of registration", message);
-        }
     }
 }
